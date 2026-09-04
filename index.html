@@ -11,6 +11,79 @@
 <main class="wrap">
 
   <section id="start" class="card">
+    <div class="hero" aria-hidden="true">
+      <svg class="hero-svg" viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" focusable="false">
+        <defs>
+          <linearGradient id="pitch" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0d1f14"/>
+            <stop offset="1" stop-color="#061009"/>
+          </linearGradient>
+          <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="ballShade" cx="0.38" cy="0.32" r="0.75">
+            <stop offset="0" stop-color="#ffffff"/>
+            <stop offset="0.7" stop-color="#e6e6e6"/>
+            <stop offset="1" stop-color="#9c9c9c"/>
+          </radialGradient>
+          <clipPath id="ballClip"><circle r="48"/></clipPath>
+          <g id="spoke" stroke="#141414" stroke-width="2.6" stroke-linecap="round">
+            <line x1="0" y1="-18" x2="0" y2="-36"/>
+            <line x1="0" y1="-36" x2="10.64" y2="-40.54"/>
+            <line x1="0" y1="-36" x2="-10.64" y2="-40.54"/>
+          </g>
+          <polygon id="patch" points="0,28 15.22,39.06 9.4,56.94 -9.4,56.94 -15.22,39.06" fill="#141414"/>
+        </defs>
+
+        <!-- ピッチ -->
+        <rect x="0" y="0" width="640" height="260" fill="url(#pitch)"/>
+        <g fill="#ffffff" opacity="0.035">
+          <rect x="40" y="30" width="70" height="200"/>
+          <rect x="180" y="30" width="70" height="200"/>
+          <rect x="320" y="30" width="70" height="200"/>
+          <rect x="460" y="30" width="70" height="200"/>
+        </g>
+        <g fill="none" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2">
+          <rect x="40" y="30" width="560" height="200"/>
+          <line x1="320" y1="30" x2="320" y2="230"/>
+          <circle cx="320" cy="130" r="42"/>
+          <rect x="40" y="75" width="84" height="110"/>
+          <rect x="40" y="105" width="30" height="50"/>
+          <path d="M124 105 A 34 34 0 0 1 124 155"/>
+          <rect x="516" y="75" width="84" height="110"/>
+          <rect x="570" y="105" width="30" height="50"/>
+          <path d="M516 105 A 34 34 0 0 0 516 155"/>
+        </g>
+        <g fill="#ffffff" fill-opacity="0.7">
+          <circle cx="98" cy="130" r="2.5"/>
+          <circle cx="542" cy="130" r="2.5"/>
+        </g>
+
+        <!-- 光と影 -->
+        <ellipse cx="320" cy="130" rx="150" ry="90" fill="url(#glow)"/>
+        <ellipse cx="322" cy="184" rx="44" ry="8" fill="#000" opacity="0.55"/>
+
+        <!-- ボール -->
+        <g class="hero-ball" transform="translate(320 130)">
+          <circle r="48" fill="url(#ballShade)"/>
+          <g clip-path="url(#ballClip)">
+            <polygon points="0,-18 17.12,-5.56 10.58,14.56 -10.58,14.56 -17.12,-5.56" fill="#141414"/>
+            <use href="#spoke"/>
+            <use href="#spoke" transform="rotate(72)"/>
+            <use href="#spoke" transform="rotate(144)"/>
+            <use href="#spoke" transform="rotate(216)"/>
+            <use href="#spoke" transform="rotate(288)"/>
+            <use href="#patch"/>
+            <use href="#patch" transform="rotate(72)"/>
+            <use href="#patch" transform="rotate(144)"/>
+            <use href="#patch" transform="rotate(216)"/>
+            <use href="#patch" transform="rotate(288)"/>
+          </g>
+          <circle r="48" fill="none" stroke="#141414" stroke-width="2.5"/>
+        </g>
+      </svg>
+    </div>
     <p class="eyebrow">QUIZ</p>
     <h1>サッカークイズ</h1>
     <p class="lead">全10問・3択。1問ずつ出題します。<br>答えを選ぶと、正解と解説が表示されます。</p>

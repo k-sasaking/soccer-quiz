@@ -10,6 +10,8 @@
   --accent: #e6e6e6;
   --correct: #35d07f;
   --wrong: #ff5f5f;
+  --card-px: 24px;
+  --card-py: 32px;
 }
 
 * { box-sizing: border-box; }
@@ -40,7 +42,8 @@ body {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 32px 24px;
+  padding: var(--card-py) var(--card-px);
+  overflow: hidden;
   animation: fade 0.25s ease both;
 }
 
@@ -51,7 +54,31 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .card { animation: none; }
+  .hero-ball { animation: none; }
   * { transition: none !important; }
+}
+
+/* ---- TOPのサッカービジュアル ---- */
+.hero {
+  margin: calc(-1 * var(--card-py)) calc(-1 * var(--card-px)) 28px;
+  border-bottom: 1px solid var(--border);
+  background: #061009;
+  line-height: 0;
+}
+
+.hero-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero-ball {
+  animation: float 3.6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(320px, 130px); }
+  50%      { transform: translate(320px, 122px); }
 }
 
 /* ---- スタート画面 ---- */
@@ -276,6 +303,8 @@ h1 {
 }
 
 @media (max-width: 480px) {
+  :root { --card-px: 18px; --card-py: 24px; }
   .wrap { padding: 24px 16px 48px; }
-  .card { padding: 24px 18px; border-radius: 14px; }
+  .card { border-radius: 14px; }
+  .hero { margin-bottom: 22px; }
 }
