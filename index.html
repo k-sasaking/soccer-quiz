@@ -13,7 +13,18 @@
   <section id="start" class="card">
     <p class="eyebrow">QUIZ</p>
     <h1>サッカークイズ</h1>
-    <p class="lead">全10問・3択。1問ずつ出題します。<br>答えを選ぶと、正解と解説が表示されます。</p>
+    <p class="lead">全10問・<span id="lead-mode">3択</span>。1問ずつ出題します。<br>答えを選ぶと、正解と解説が表示されます。</p>
+
+    <fieldset class="mode">
+      <legend class="mode-legend">選択肢の数</legend>
+      <div class="mode-options">
+        <input class="mode-input" type="radio" name="mode" id="mode-3" value="3" checked>
+        <label class="mode-option" for="mode-3">3択</label>
+        <input class="mode-input" type="radio" name="mode" id="mode-4" value="4">
+        <label class="mode-option" for="mode-4">4択</label>
+      </div>
+    </fieldset>
+
     <button id="start-btn" class="btn btn-primary" type="button">スタート</button>
   </section>
 

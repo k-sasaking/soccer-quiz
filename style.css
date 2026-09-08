@@ -74,6 +74,62 @@ h1 {
   font-size: 1.05rem;
 }
 
+/* ---- 択数の選択（3択 / 4択） ---- */
+.mode {
+  margin: 0 0 28px;
+  padding: 0;
+  border: 0;
+}
+
+.mode-legend {
+  padding: 0 0 10px;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.mode-options {
+  display: flex;
+  gap: 12px;
+}
+
+.mode-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mode-option {
+  flex: 1;
+  min-height: 56px;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  border: 1px solid var(--btn-border);
+  border-radius: 12px;
+  background: var(--btn-bg);
+  color: var(--text);
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.mode-option:hover { border-color: #9a9a9a; background: #303030; }
+
+.mode-input:checked + .mode-option {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: #000000;
+}
+
+.mode-input:focus-visible + .mode-option {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
 /* ---- ボタン ---- */
 .btn {
   display: block;
