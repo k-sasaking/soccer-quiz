@@ -88,10 +88,23 @@ const el = {
   retryBtn: document.getElementById("retry-btn")
 };
 
+let quizList = [];  // 出題順にシャッフルした問題（QUIZ のコピー）
 let current = 0;
 let answers = [];   // 各問で選んだ選択肢のindex
 let locked = false; // 回答済みで選択肢を押せない状態
 let choiceCount = 3; // 表示する選択肢の数（3 or 4）
+
+// Fisher-Yatesでシャッフルした新しい配列を返す（元の配列は変更しない）
+function shuffle(list) {
+  const copy = list.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = copy[i];
+    copy[i] = copy[j];
+    copy[j] = tmp;
+  }
+  return copy;
+}
 
 function show(section) {
   el.start.hidden = section !== el.start;
@@ -100,11 +113,11 @@ function show(section) {
 }
 
 function renderQuestion() {
-  const item = QUIZ[current];
+  const item = quizList[current];
   locked = false;
 
-  el.counter.textContent = "第" + (current + 1) + "問 / 全" + QUIZ.length + "問";
-  el.barFill.style.width = (current / QUIZ.length) * 100 + "%";
+  el.counter.textContent = "第" + (current + 1) + "問 / 全" + quizList.length + "問";
+  el.barFill.style.width = (current / quizList.length) * 100 + "%";
   el.question.textContent = item.q;
 
   // 回答するまで正解・解説はDOMに入れない
@@ -140,7 +153,7 @@ function answer(selected) {
   if (locked) return;
   locked = true;
 
-  const item = QUIZ[current];
+  const item = quizList[current];
   const correct = selected === item.answer;
   answers[current] = selected;
 
@@ -155,14 +168,14 @@ function answer(selected) {
   el.judge.textContent = correct ? "◯ 正解！" : "✕ 不正解";
   el.judge.className = "judge " + (correct ? "judge-correct" : "judge-wrong");
   el.explanation.textContent = item.explanation;
-  el.nextBtn.textContent = current === QUIZ.length - 1 ? "結果を見る" : "次の問題へ";
+  el.nextBtn.textContent = current === quizList.length - 1 ? "結果を見る" : "次の問題へ";
   el.feedback.hidden = false;
-  el.barFill.style.width = ((current + 1) / QUIZ.length) * 100 + "%";
+  el.barFill.style.width = ((current + 1) / quizList.length) * 100 + "%";
   el.nextBtn.focus();
 }
 
 function next() {
-  if (current === QUIZ.length - 1) {
+  if (current === quizList.length - 1) {
     showResult();
   } else {
     current += 1;
@@ -171,15 +184,15 @@ function next() {
 }
 
 function showResult() {
-  const score = QUIZ.reduce(function (sum, item, i) {
+  const score = quizList.reduce(function (sum, item, i) {
     return sum + (answers[i] === item.answer ? 1 : 0);
   }, 0);
 
   el.scoreNum.textContent = String(score);
-  el.rate.textContent = "正答率 " + Math.round((score / QUIZ.length) * 100) + "%";
+  el.rate.textContent = "正答率 " + Math.round((score / quizList.length) * 100) + "%";
 
   el.review.textContent = "";
-  QUIZ.forEach(function (item, i) {
+  quizList.forEach(function (item, i) {
     const correct = answers[i] === item.answer;
 
     const li = document.createElement("li");
@@ -212,6 +225,7 @@ function showResult() {
 
 function startQuiz(count) {
   choiceCount = count === 4 ? 4 : 3;
+  quizList = shuffle(QUIZ);
   current = 0;
   answers = [];
   show(el.quiz);
