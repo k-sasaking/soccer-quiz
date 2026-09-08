@@ -4,6 +4,7 @@
 
 ## 公開ページ
 
+以下のページで本番です
 https://k-sasaking.github.io/soccer-quiz/
 
 ## 使い方
