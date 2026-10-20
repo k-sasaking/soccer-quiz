@@ -2,7 +2,7 @@
 
 各テーブルの詳しい定義は [db.md](db.md) を参照してください。
 
-> 静的版（リポジトリ直下の `index.html`）は DB を使いません。Next.js 版（`api-server/`）はこの設計どおりのテーブルを Neon（PostgreSQL）に作り、Prisma で読み書きしています。
+> 静的版（リポジトリ直下の Next.js。GitHub Pages で公開）は DB を使いません。Next.js 版（`api-server/`）はこの設計どおりのテーブルを Neon（PostgreSQL）に作り、Prisma で読み書きしています。
 > この図は、そのテーブルの構造です。
 
 ```mermaid

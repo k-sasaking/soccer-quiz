@@ -1,6 +1,6 @@
 // DB に入れる初期データ（npm run db:seed で投入する）。テーブルの形は docs/db.md に合わせている。
-// 中身はリポジトリ直下の script.js の QUIZ 配列（元データは クイズ.md）から転記した。
-// 問題を変えるときは、クイズ.md・script.js・このファイルをそろえて直し、npm run db:seed を実行する。
+// 中身は静的版の QUIZ 配列（今は data/quiz.ts、もとは script.js。元データは クイズ.md）から転記した。
+// 問題を変えるときは、クイズ.md・data/quiz.ts・このファイルをそろえて直し、npm run db:seed を実行する。
 
 export type SeedQuestion = {
   sectionNo: number;

@@ -5,7 +5,7 @@
 - **データは Prisma（ORM）で Neon（PostgreSQL）に保存します。** 問題・選択肢・資料は DB から読み、挑戦と回答も DB に書き込みます。サーバーを再起動しても消えません。
 - 画面（`app/page.tsx`）は問題・正解・解説・結果をすべて API から取得します。画面側には問題データを持ちません。
 - **クイズはログインした人だけが遊べます。** メールアドレスとパスワードで登録・ログインします（next-auth）。挑戦は始めた本人しか操作できません。
-- リポジトリ直下の `index.html` は従来どおり単体で動く静的版で、この API は使いません。
+- リポジトリ直下は GitHub Pages で公開している静的版（Next.js の静的書き出し）で、この API は使いません。
 
 ## 使い方
 
@@ -118,8 +118,8 @@ npm run dev
 
 ## 問題データについて
 
-`prisma/seed-data.ts` は、リポジトリ直下の `script.js` の `QUIZ` 配列を転記したものです。
-問題を変えるときは、`クイズ.md`・`script.js`・`prisma/seed-data.ts` をそろえて直し、`npm run db:seed` を実行します。
+`prisma/seed-data.ts` は、静的版の `data/quiz.ts`（もとは `script.js`）の `QUIZ` 配列を転記したものです。
+問題を変えるときは、`クイズ.md`・`data/quiz.ts`・`prisma/seed-data.ts` をそろえて直し、`npm run db:seed` を実行します。
 回答履歴のある問題を変えると、古い問題は論理削除され、新しい問題として作り直されます（過去の成績は変わりません。`docs/db.md`「過去の成績を変えないための決まり」）。
 
 `docs/db.md` の DDL にある CHECK 制約・部分インデックス・トリガーは Prisma のスキーマでは書けないため、最初のマイグレーション SQL の末尾に手で足してあります。
