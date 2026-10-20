@@ -1,0 +1,10 @@
+node_modules/
+.next/
+next-env.d.ts
+*.tsbuildinfo
+.env*.local
+
+/lib/generated/prisma
+.env
+.env.*
+!.env.example

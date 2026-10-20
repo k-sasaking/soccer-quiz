@@ -19,6 +19,8 @@ https://k-sasaking.github.io/soccer-quiz/
 | `script.js` | クイズ10問のデータと出題ロジック |
 | `クイズ.md` | クイズの元データ（問題・正解・解説） |
 | `soccer_knowledge.md` | クイズの出典となる資料 |
+| `docs/` | DB設計書・ER図・API設計書 |
+| `api-server/` | Next.js 版（画面 + API）。画面は API からデータを取得して動く。詳しくは `api-server/README.md` |
 
 ## 仕様
 

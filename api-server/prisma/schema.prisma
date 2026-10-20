@@ -1,0 +1,132 @@
+// Prisma スキーマ。テーブルの形は docs/db.md（DB設計書）に合わせている。
+// docs/db.md の DDL にある CHECK 制約・部分インデックス・トリガーは Prisma では書けないため、
+// それらはアプリ側（lib/quiz-service.ts）で守る。
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// 1. 資料
+model Source {
+  id        BigInt   @id @default(autoincrement())
+  fileName  String   @unique @map("file_name") @db.VarChar(255)
+  title     String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  sections SourceSection[]
+
+  @@map("sources")
+}
+
+// 2. 資料の章
+model SourceSection {
+  id        BigInt   @id @default(autoincrement())
+  sourceId  BigInt   @map("source_id")
+  sectionNo Int      @map("section_no") @db.SmallInt
+  title     String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  source    Source     @relation(fields: [sourceId], references: [id], onDelete: Restrict)
+  questions Question[]
+
+  @@unique([sourceId, sectionNo])
+  @@map("source_sections")
+}
+
+// 3. 問題
+model Question {
+  id              BigInt    @id @default(autoincrement())
+  sourceSectionId BigInt    @map("source_section_id")
+  questionNo      Int       @map("question_no") @db.SmallInt
+  body            String
+  quote           String
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz
+
+  sourceSection  SourceSection   @relation(fields: [sourceSectionId], references: [id], onDelete: Restrict)
+  choices        Choice[]
+  sessionAnswers SessionAnswer[]
+
+  @@index([sourceSectionId])
+  @@map("questions")
+}
+
+// 4. 選択肢（1問につき4つ。4つ目の D は4択のときだけ使う）
+model Choice {
+  id         BigInt   @id @default(autoincrement())
+  questionId BigInt   @map("question_id")
+  choiceNo   Int      @map("choice_no") @db.SmallInt
+  body       String   @db.VarChar(255)
+  isCorrect  Boolean  @default(false) @map("is_correct")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  question       Question        @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  sessionAnswers SessionAnswer[]
+
+  @@unique([questionId, choiceNo])
+  @@unique([questionId, id])
+  @@map("choices")
+}
+
+// 5. 挑戦
+model PlaySession {
+  id          BigInt    @id @default(autoincrement())
+  publicId    String    @unique @default(dbgenerated("gen_random_uuid()")) @map("public_id") @db.Uuid
+  // 挑戦した利用者。ログイン機能を入れる前に作られた挑戦は NULL（API からは誰も操作できない）
+  userId      BigInt?   @map("user_id")
+  choiceCount Int       @map("choice_count") @db.SmallInt
+  finishedAt  DateTime? @map("finished_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  user    User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers SessionAnswer[]
+
+  @@index([userId])
+  @@map("play_sessions")
+}
+
+// 6. 回答（挑戦ごとの出題順と、選んだ選択肢）
+model SessionAnswer {
+  playSessionId    BigInt    @map("play_session_id")
+  orderNo          Int       @map("order_no") @db.SmallInt
+  questionId       BigInt    @map("question_id")
+  selectedChoiceId BigInt?   @map("selected_choice_id")
+  answeredAt       DateTime? @map("answered_at") @db.Timestamptz
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  playSession PlaySession @relation(fields: [playSessionId], references: [id], onDelete: Cascade)
+  question    Question    @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  // 複合外部キー：選んだ選択肢は、出題した問題のものに限る
+  selectedChoice Choice?  @relation(fields: [questionId, selectedChoiceId], references: [questionId, id], onDelete: Restrict)
+
+  @@id([playSessionId, orderNo])
+  @@unique([playSessionId, questionId])
+  @@index([questionId, selectedChoiceId])
+  @@map("session_answers")
+}
+
+// 7. 利用者（メールアドレスとパスワードでログインする）
+model User {
+  id           BigInt   @id @default(autoincrement())
+  // 小文字にそろえて保存する（lib/users.ts）
+  email        String   @unique @db.VarChar(254)
+  // パスワードそのものは保存せず、scrypt のハッシュだけを持つ（lib/password.ts）
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  playSessions PlaySession[]
+
+  @@map("users")
+}
