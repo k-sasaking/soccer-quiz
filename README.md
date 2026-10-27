@@ -76,3 +76,9 @@ GitHub Pages に公開する場合は、リポジトリの Settings → Secrets 
 ## クイズ内容を変更するとき
 
 出題データは `data/quiz.ts` の `QUIZ` 配列に直接書いています。`クイズ.md` を更新したときは `data/quiz.ts` も合わせて直してください。
+
+
+## build
+```
+npm run build
+```
